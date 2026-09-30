@@ -348,7 +348,7 @@ git clone https://github.com/Humobot1812/CAVE_DIVER_SIH_2026.git
 cd CAVE_DIVER_SIH_2026
 
 # 2. Install ROS 2 dependencies
-rosdep install --from-paths src --ignore-src -r -y
+rosdep install --from-paths . --ignore-src -r -y
 
 # 3. Build
 colcon build --symlink-install
@@ -373,7 +373,7 @@ ros2 launch simulation test_cave.launch.xml
 ```bash
 source /opt/ros/humble/setup.bash && source install/setup.bash
 ros2 run ros_gz_bridge parameter_bridge \
-  --ros-args -p config_file:=src/simulation/config/gazebo_bridge.yaml
+  --ros-args -p config_file:=simulation/config/gazebo_bridge.yaml
 ```
 
 **Terminal 3 — Joystick Teleop:**
