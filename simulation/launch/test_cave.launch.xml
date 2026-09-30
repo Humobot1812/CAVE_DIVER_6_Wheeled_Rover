@@ -1,0 +1,16 @@
+<launch>
+
+    <set_env
+        name="IGN_GAZEBO_RESOURCE_PATH"
+        value="/home/abhinav/.ignition/fuel/fuel.ignitionrobotics.org/openrobotics/models:/home/abhinav/.ignition/fuel/fuel.gazebosim.org/openrobotics/models"/>
+
+    <set_env
+        name="GZ_SIM_RESOURCE_PATH"
+        value="/home/abhinav/.ignition/fuel/fuel.ignitionrobotics.org/openrobotics/models:/home/abhinav/.ignition/fuel/fuel.gazebosim.org/openrobotics/models:/home/abhinav/gz_ws/src/ardupilot_gazebo/models:/home/abhinav/gz_ws/src/ardupilot_gazebo/worlds"/>
+
+    <executable
+        cmd="ign gazebo -v4 -r --levels /home/abhinav/WareOps/src/Simulation/world/simple_cave_01.sdf --force-version 6"
+        output="screen"
+        shell="true"/>
+
+</launch>

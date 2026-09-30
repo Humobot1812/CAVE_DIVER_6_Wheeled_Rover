@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SIH GCS — Subterranean Recon Robot Ground Control Station</title>
+<meta name="description" content="SIH Smart India Hackathon — AI-Powered Subterranean Robot Ground Control Station. Dual camera inspection, environmental monitoring, and full teleoperation." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/static/css/gcs_theme.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="gcs-body">
+
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<header class="gcs-header">
+  <div class="header-left">
+    <div class="brand-wrap">
+      <div class="brand-radar"><div class="radar-sweep"></div><div class="radar-dot"></div></div>
+      <div>
+        <div class="brand-title">SIH <span class="brand-pro">GCS</span></div>
+        <div class="brand-sub">SUBTERRANEAN RECON · GROUND CONTROL STATION</div>
+      </div>
+    </div>
+    <div class="mission-pill">
+      <div class="pulse-dot"></div>
+      <span class="pill-label">MISSION ACTIVE</span>
+      <span class="pill-code" id="header-clock">00:00:00.000 UTC</span>
+    </div>
+    <span id="ros-status" class="text-amber" style="font-family:var(--font-tactical);font-size:.7rem;font-weight:700;letter-spacing:.8px;">○ CONNECTING</span>
+  </div>
+
+  <div class="header-center">
+    <div class="telem-bar">
+      <div class="t-item">
+        <span class="t-lbl">POSITION X</span>
+        <span class="t-val" id="pos-x">0.00m</span>
+      </div>
+      <div class="t-item">
+        <span class="t-lbl">POSITION Y</span>
+        <span class="t-val" id="pos-y">0.00m</span>
+      </div>
+      <div class="t-item">
+        <span class="t-lbl">HEADING</span>
+        <span class="t-val" id="pos-heading">0°</span>
+      </div>
+      <div class="t-item">
+        <span class="t-lbl">BATTERY</span>
+        <div class="batt-wrap">
+          <div class="batt-fill" style="width:78%;"></div>
+          <span class="batt-txt">78%</span>
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-lbl">SIGNAL</span>
+        <span class="t-val text-emerald">5.8GHz</span>
+      </div>
+      <div class="t-item">
+        <span class="t-lbl">PING</span>
+        <span class="t-val text-cyan">12ms</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button class="btn-tac btn-hazard" id="btn-hazard" onclick="toggleHazard()" title="[H] Simulate hazard scenario">⚠ SIM HAZARD</button>
+    <button class="btn-tac btn-light" id="btn-flashlight" onclick="toggleFlashlight()" title="[L] Toggle flashlight">🔦 FLASHLIGHT</button>
+    <button class="btn-tac btn-snap" onclick="takeSnapshot()" title="[P] Save dual snapshot">📷 SNAPSHOT</button>
+    <button class="btn-tac btn-estop" id="btn-estop" onclick="toggleEStop()" title="[E] Emergency stop">🛑 E-STOP</button>
+  </div>
+</header>
+
+<!-- ══════════════════════ COCKPIT GRID ══════════════════════ -->
+<main class="gcs-cockpit">
+
+  <!-- ═══════ LEFT COLUMN — Environmental Sensors ═══════ -->
+  <div class="panel-col" id="left-col">
+
+    <!-- Safety Banner -->
+    <div class="card-glass panel-hdr">
+      <div id="safety-banner" class="safety-banner banner-nominal">
+        <span id="safety-ico" class="safety-ico">✅</span>
+        <div class="safety-info">
+          <div id="safety-ttl" class="safety-ttl">ENVIRONMENT NOMINAL</div>
+          <div id="safety-dsc" class="safety-dsc">All sensors within safe operating limits</div>
+        </div>
+        <span id="safety-aqi" class="safety-aqi">AQI</span>
+      </div>
+    </div>
+
+    <!-- 6 Sensor Gauges Grid -->
+    <div class="card-glass" style="padding:.8rem;">
+      <div class="panel-title-row" style="margin-bottom:.6rem;">
+        <div class="icon-title"><span>🌡</span><h3>ENVIRONMENTAL SENSORS</h3></div>
+        <span class="badge-live">LIVE 10Hz</span>
+      </div>
+      <div class="gauges-grid">
+
+        <!-- Temperature -->
+        <div class="gauge-card card-glass" id="g-temp">
+          <div class="g-hdr">
+            <span class="g-title">TEMPERATURE</span>
+            <span class="g-unit">°C</span>
+          </div>
+          <div class="g-visual">
+            <svg class="radial-gauge" viewBox="0 0 100 56">
+              <path class="gauge-track" d="M 14 50 A 36 36 0 0 1 86 50" />
+              <path class="gauge-fill" d="M 14 50 A 36 36 0 0 1 86 50" />
+            </svg>
+            <div class="g-readout"><span class="g-val">--</span><span class="g-val-unit">°C</span></div>
+          </div>
+          <div class="g-ftr">
+            <span class="g-sub text-cyan">NOMINAL</span>
+            <span class="g-range">SAFE: 15–34°C</span>
+          </div>
+        </div>
+
+        <!-- Humidity -->
+        <div class="gauge-card card-glass" id="g-hum">
+          <div class="g-hdr">
+            <span class="g-title">HUMIDITY</span>
+            <span class="g-unit">%RH</span>
+          </div>
+          <div class="g-visual">
+            <svg class="radial-gauge" viewBox="0 0 100 56">
+              <path class="gauge-track" d="M 14 50 A 36 36 0 0 1 86 50" />
+              <path class="gauge-fill" d="M 14 50 A 36 36 0 0 1 86 50" />
+            </svg>
+            <div class="g-readout"><span class="g-val">--</span><span class="g-val-unit">%</span></div>
+          </div>
+          <div class="g-ftr">
+            <span class="g-sub text-cyan">NORMAL</span>
+            <span class="g-range">REF: 30–95%</span>
+          </div>
+        </div>
+
+        <!-- CO2 -->
+        <div class="gauge-card card-glass" id="g-co2">
+          <div class="g-hdr">
+            <span class="g-title">CO₂</span>
+            <span class="g-unit">ppm</span>
+          </div>
+          <div class="g-visual">
+            <svg class="radial-gauge" viewBox="0 0 100 56">
+              <path class="gauge-track" d="M 14 50 A 36 36 0 0 1 86 50" />
+              <path class="gauge-fill" d="M 14 50 A 36 36 0 0 1 86 50" />
+            </svg>
+            <div class="g-readout"><span class="g-val">--</span><span class="g-val-unit">ppm</span></div>
+          </div>
+          <div class="g-ftr">
+            <span class="g-sub text-emerald">SAFE</span>
+            <span class="g-range">WARN: &gt;1000ppm</span>
+          </div>
+        </div>
+
+        <!-- O2 -->
+        <div class="gauge-card card-glass" id="g-o2">
+          <div class="g-hdr">
+            <span class="g-title">OXYGEN O₂</span>
+            <span class="g-unit">%</span>
+          </div>
+          <div class="g-visual">
+            <svg class="radial-gauge" viewBox="0 0 100 56">
+              <path class="gauge-track" d="M 14 50 A 36 36 0 0 1 86 50" />
+              <path class="gauge-fill" d="M 14 50 A 36 36 0 0 1 86 50" />
+            </svg>
+            <div class="g-readout"><span class="g-val">--</span><span class="g-val-unit">%</span></div>
+          </div>
+          <div class="g-ftr">
+            <span class="g-sub text-emerald">NORMAL</span>
+            <span class="g-range">DANGER: &lt;19.5%</span>
+          </div>
+        </div>
+
+        <!-- CH4 -->
+        <div class="gauge-card card-glass" id="g-ch4">
+          <div class="g-hdr">
+            <span class="g-title">METHANE CH₄</span>
+            <span class="g-unit">%LEL</span>
+          </div>
+          <div class="g-visual">
+            <svg class="radial-gauge" viewBox="0 0 100 56">
+              <path class="gauge-track" d="M 14 50 A 36 36 0 0 1 86 50" />
+              <path class="gauge-fill" d="M 14 50 A 36 36 0 0 1 86 50" />
+            </svg>
+            <div class="g-readout"><span class="g-val">--</span><span class="g-val-unit">%</span></div>
+          </div>
+          <div class="g-ftr">
+            <span class="g-sub text-emerald">SAFE</span>
+            <span class="g-range">WARN: 1.0%LEL</span>
+          </div>
+        </div>
+
+        <!-- CO -->
+        <div class="gauge-card card-glass" id="g-co">
+          <div class="g-hdr">
+            <span class="g-title">CARBON CO</span>
+            <span class="g-unit">ppm</span>
+          </div>
+          <div class="g-visual">
+            <svg class="radial-gauge" viewBox="0 0 100 56">
+              <path class="gauge-track" d="M 14 50 A 36 36 0 0 1 86 50" />
+              <path class="gauge-fill" d="M 14 50 A 36 36 0 0 1 86 50" />
+            </svg>
+            <div class="g-readout"><span class="g-val">--</span><span class="g-val-unit">ppm</span></div>
+          </div>
+          <div class="g-ftr">
+            <span class="g-sub text-emerald">SAFE</span>
+            <span class="g-range">WARN: 9ppm</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Live Chart -->
+    <div class="chart-card card-glass">
+      <div class="chart-hdr">
+        <span class="chart-title">📈 LIVE TELEMETRY HISTORY</span>
+        <div class="chart-legend">
+          <span class="leg-item"><span class="leg-dot" style="background:#f87171;"></span>Temp</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#10b981;"></span>O2</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#f59e0b;"></span>CH4</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#818cf8;"></span>CO</span>
+        </div>
+      </div>
+      <div class="canvas-wrap"><canvas id="envChart"></canvas></div>
+    </div>
+
+    <!-- LiDAR Radar -->
+    <div class="radar-card card-glass">
+      <div class="radar-hdr">
+        <div class="icon-title"><span>📡</span><h4>LIDAR RADAR</h4></div>
+        <span class="radar-coords text-cyan" id="radar-coords">X:0.00 Y:0.00 H:0°</span>
+      </div>
+      <div class="radar-box"><canvas id="radarCanvas"></canvas></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════ CENTER COLUMN — Dual Camera Viewport ═══════ -->
+  <div class="panel-col panel-center" id="center-col">
+
+    <!-- Toolbar -->
+    <div class="card-glass viewport-toolbar">
+      <div class="stream-pills">
+        <div class="stream-pill"><div class="dot-green"></div>RGB OPTICAL <span class="stream-fps" id="rgb-fps">–– FPS</span></div>
+        <div class="stream-pill"><div class="dot-amber"></div>LWIR THERMAL <span class="stream-fps" id="thermal-fps">–– FPS</span></div>
+      </div>
+      <div class="layout-btns">
+        <button class="btn-layout active" id="layout-dual" onclick="setLayout('dual')" title="Side-by-side">⊞ DUAL</button>
+        <button class="btn-layout" id="layout-rgb-pip" onclick="setLayout('rgb-pip')" title="RGB fullscreen + thermal PIP">RGB+PIP</button>
+        <button class="btn-layout" id="layout-thermal-pip" onclick="setLayout('thermal-pip')" title="Thermal fullscreen + RGB PIP">TH+PIP</button>
+        <button class="btn-layout" id="layout-rgb-only" onclick="setLayout('rgb-only')" title="RGB only">RGB</button>
+        <button class="btn-layout" id="layout-thermal-only" onclick="setLayout('thermal-only')" title="Thermal only">TH</button>
+      </div>
+    </div>
+
+    <!-- Snapshot notification bar -->
+    <div id="snap-bar" class="snap-bar" style="display:none;">
+      📷 Snapshot saved
+    </div>
+
+    <!-- Camera Feeds -->
+    <div id="video-stage" class="video-stage layout-dual" style="flex:1; min-height:0;">
+
+      <!-- RGB Feed -->
+      <div class="video-feed-box" id="feed-rgb">
+        <div class="feed-hud-top">
+          <div class="hud-badge hud-badge-rgb">
+            <div class="dot-green"></div>
+            RGB OPTICAL CAM
+          </div>
+          <div class="hud-stats">
+            <span class="hud-stat" id="fl-status-pill">🔦 FLASHLIGHT OFF</span>
+          </div>
+        </div>
+        <div class="video-wrap">
+          <img src="/stream/rgb" alt="RGB Camera Feed" id="rgb-stream-img" />
+          <div class="tac-overlay">
+            <div class="crosshair"></div>
+            <div class="pitch-ladder">
+              <div class="pitch-line">+10</div>
+              <div class="pitch-line">  0</div>
+              <div class="pitch-line">-10</div>
+            </div>
+            <div class="compass-tape" id="compass-disp">N · 0°</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thermal Feed -->
+      <div class="video-feed-box" id="feed-thermal">
+        <div class="feed-hud-top">
+          <div class="hud-badge hud-badge-th">
+            <div class="dot-amber"></div>
+            LWIR THERMAL CAM
+          </div>
+          <div class="hud-stats">
+            <span class="hud-stat">SPOT: <span id="spot-temp">– °C</span></span>
+          </div>
+        </div>
+        <div class="video-wrap" style="position:relative;">
+          <img src="/stream/thermal" alt="Thermal Camera Feed" id="thermal-stream-img" />
+          <div class="thermal-overlay">
+            <div class="spot-reticle">
+              <div class="spot-cross"></div>
+              <div class="spot-tag" id="spot-tag">–°C</div>
+            </div>
+          </div>
+          <div class="thermal-scale"><div class="th-gradient"></div></div>
+          <div class="scale-lbls"><span>80°C</span><span>45°C</span><span>10°C</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Colormap Palette Bar -->
+    <div class="colormap-card card-glass">
+      <div class="cm-row">
+        <span class="cm-label">🎨 THERMAL PALETTE:</span>
+        <div class="cm-btns">
+          <button class="btn-palette active" id="cm-inferno" onclick="selectColormap('INFERNO')"><span class="swatch sw-inferno"></span>INFERNO</button>
+          <button class="btn-palette" id="cm-jet" onclick="selectColormap('JET')"><span class="swatch sw-jet"></span>JET</button>
+          <button class="btn-palette" id="cm-hot" onclick="selectColormap('HOT')"><span class="swatch sw-hot"></span>HOT</button>
+          <button class="btn-palette" id="cm-magma" onclick="selectColormap('MAGMA')"><span class="swatch sw-magma"></span>MAGMA</button>
+          <button class="btn-palette" id="cm-plasma" onclick="selectColormap('PLASMA')"><span class="swatch sw-plasma"></span>PLASMA</button>
+          <button class="btn-palette" id="cm-turbo" onclick="selectColormap('TURBO')"><span class="swatch sw-turbo"></span>TURBO</button>
+          <button class="btn-palette" id="cm-grayscale" onclick="selectColormap('GRAYSCALE')"><span class="swatch sw-gray"></span>GRAY</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════ RIGHT COLUMN — Controls ═══════ -->
+  <div class="panel-col" id="right-col">
+
+    <!-- Quick-Access Controls -->
+    <div class="ctrl-card card-glass">
+      <div class="ctrl-hdr" style="margin-bottom:.5rem;">
+        <div class="icon-title"><span>⚙</span><h4>QUICK CONTROLS</h4></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.45rem;">
+        <button class="btn-tac btn-light" id="btn-flashlight-qc" onclick="toggleFlashlight()" style="justify-content:center;padding:.5rem;">💡 FLASHLIGHT</button>
+        <button class="btn-tac btn-snap" onclick="takeSnapshot()" style="justify-content:center;padding:.5rem;">📷 SNAPSHOT</button>
+        <button class="btn-tac btn-hazard" onclick="toggleHazard()" style="justify-content:center;padding:.5rem;">⚠ HAZ SIM</button>
+        <button class="btn-tac btn-estop" onclick="toggleEStop()" style="justify-content:center;padding:.5rem;">🛑 E-STOP</button>
+      </div>
+      <div style="margin-top:.55rem;border-top:1px solid rgba(255,255,255,.05);padding-top:.5rem;display:flex;flex-direction:column;gap:.35rem;">
+        <div style="font-family:var(--font-tactical);font-size:.62rem;font-weight:700;letter-spacing:.9px;color:var(--text-muted);">KEYBOARD SHORTCUTS</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;">
+          <span style="font-family:var(--font-mono);font-size:.58rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.16rem .26rem;text-align:center;color:var(--text-secondary);">W/S</span>
+          <span style="font-family:var(--font-mono);font-size:.58rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.16rem .26rem;text-align:center;color:var(--text-secondary);">A/D</span>
+          <span style="font-family:var(--font-mono);font-size:.58rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.16rem .26rem;text-align:center;color:var(--text-secondary);">L</span>
+          <span style="font-family:var(--font-mono);font-size:.58rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.16rem .26rem;text-align:center;color:var(--text-secondary);">E</span>
+          <span style="font-family:var(--font-tactical);font-size:.55rem;text-align:center;color:var(--text-muted);">FWD/BWD</span>
+          <span style="font-family:var(--font-tactical);font-size:.55rem;text-align:center;color:var(--text-muted);">STEER</span>
+          <span style="font-family:var(--font-tactical);font-size:.55rem;text-align:center;color:var(--text-muted);">LIGHT</span>
+          <span style="font-family:var(--font-tactical);font-size:.55rem;text-align:center;color:var(--text-muted);">E-STOP</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.3rem;margin-top:.1rem;">
+          <span style="font-family:var(--font-mono);font-size:.58rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.16rem .26rem;text-align:center;color:var(--text-secondary);">C</span>
+          <span style="font-family:var(--font-mono);font-size:.58rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.16rem .26rem;text-align:center;color:var(--text-secondary);">P</span>
+          <span style="font-family:var(--font-mono);font-size:.58rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.16rem .26rem;text-align:center;color:var(--text-secondary);">H</span>
+          <span style="font-family:var(--font-tactical);font-size:.55rem;text-align:center;color:var(--text-muted);">COLORMAP</span>
+          <span style="font-family:var(--font-tactical);font-size:.55rem;text-align:center;color:var(--text-muted);">PHOTO</span>
+          <span style="font-family:var(--font-tactical);font-size:.55rem;text-align:center;color:var(--text-muted);">HAZ SIM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="log-card card-glass">
+      <div class="log-hdr">
+        <span>📋 MISSION EVENT LOG</span>
+        <button class="btn-clr" onclick="clearLog()">CLR</button>
+      </div>
+      <div class="log-stream" id="log-stream"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="/static/js/gcs_app.js"></script>
+</body>
+</html>

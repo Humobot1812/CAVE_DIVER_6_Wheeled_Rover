@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <gazebo reference="front_left_wheel_link">
+        <mu1>1.4</mu1>
+        <mu2>1.2</mu2>
+        <kp>200000.0</kp>
+        <kd>5000.0</kd>
+        <minDepth>0.002</minDepth>
+        <maxVel>10.0</maxVel>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+
+    <gazebo reference="front_right_wheel_link">
+        <mu1>1.4</mu1>
+        <mu2>1.2</mu2>
+        <kp>200000.0</kp>
+        <kd>5000.0</kd>
+        <minDepth>0.002</minDepth>
+        <maxVel>10.0</maxVel>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+
+    <gazebo reference="mid_left_wheel_link">
+        <mu1>1.4</mu1>
+        <mu2>1.2</mu2>
+        <kp>200000.0</kp>
+        <kd>5000.0</kd>
+        <minDepth>0.002</minDepth>
+        <maxVel>10.0</maxVel>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+
+    <gazebo reference="mid_right_wheel_link">
+        <mu1>1.4</mu1>
+        <mu2>1.2</mu2>
+        <kp>200000.0</kp>
+        <kd>5000.0</kd>
+        <minDepth>0.002</minDepth>
+        <maxVel>10.0</maxVel>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+
+    <gazebo reference="rear_left_wheel_link">
+        <mu1>1.4</mu1>
+        <mu2>1.2</mu2>
+        <kp>200000.0</kp>
+        <kd>5000.0</kd>
+        <minDepth>0.002</minDepth>
+        <maxVel>10.0</maxVel>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+
+    <gazebo reference="rear_right_wheel_link">
+        <mu1>1.4</mu1>
+        <mu2>1.2</mu2>
+        <kp>200000.0</kp>
+        <kd>5000.0</kd>
+        <minDepth>0.002</minDepth>
+        <maxVel>10.0</maxVel>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+    
+    <gazebo reference="base_link">
+        <mu1>0.000002</mu1>
+        <mu2>0.000002</mu2>
+    </gazebo>
+
+    <gazebo>
+        <plugin 
+            filename="gz-sim-diff-drive-system" 
+            name="gz::sim::systems::DiffDrive">
+            <left_joint>last_rear_left_wheel_joint</left_joint>
+            <right_joint>last_rear_right_wheel_joint</right_joint>
+            <left_joint>last_mid_left_wheel_joint</left_joint>
+            <right_joint>last_mid_right_wheel_joint</right_joint>
+            <left_joint>last_front_left_wheel_joint</left_joint>
+            <right_joint>last_front_right_wheel_joint</right_joint>
+            <topic>/cmd_vel</topic>
+
+            <max_velocity>15.0</max_velocity> 
+            <max_linear_acceleration>15.0</max_linear_acceleration>
+            <min_linear_acceleration>-15.0</min_linear_acceleration>
+            <max_angular_acceleration>25.0</max_angular_acceleration>
+            <min_angular_acceleration>-25.0</min_angular_acceleration>
+            <max_linear_velocity>6.0</max_linear_velocity>
+            <min_linear_velocity>-6.0</min_linear_velocity>
+            <max_angular_velocity>15.0</max_angular_velocity>
+            <min_angular_velocity>-15.0</min_angular_velocity>
+
+            <wheel_separation>0.62942</wheel_separation>
+            <wheel_radius>0.05</wheel_radius>
+
+            <odom_topic>odom</odom_topic>
+            <tf_topic>tf</tf_topic>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_footprint</child_frame_id>
+            <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+    </gazebo>
+
+  
+
+    <gazebo>
+        <plugin 
+            filename="gz-sim-joint-state-publisher-system" 
+            name="gz::sim::systems::JointStatePublisher">
+            <!-- <topic>joint_states</topic> -->
+            <joint_name>last_rear_left_wheel_joint</joint_name>
+            <joint_name>last_rear_right_wheel_joint</joint_name>
+            <joint_name>last_mid_left_wheel_joint</joint_name>
+            <joint_name>last_mid_right_wheel_joint</joint_name>
+            <joint_name>last_front_left_wheel_joint</joint_name>
+            <joint_name>last_front_right_wheel_joint</joint_name>
+            <joint_name>camera_base_cylinder_joint</joint_name> 
+            <joint_name>camera_cylinder_sphere_joint</joint_name>          
+        </plugin>
+    </gazebo>
+
+
+    <gazebo>
+        <plugin name='gz::sim::systems::Sensors' filename='gz-sim-sensors-system'>
+            <render_engine>ogre2</render_engine>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="camera_sphere_link">
+        <!-- RGB Camera -->
+        <sensor name="camera" type="camera">
+            <camera>
+                <horizontal_fov>1.089</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.1</near>
+                    <far>25</far>
+                </clip>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.007</stddev>
+                </noise>
+                <optical_frame_id>optical_camera_link</optical_frame_id>
+                <camera_info_topic>camera/camera_info</camera_info_topic>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>20</update_rate>
+            <visualize>true</visualize>
+            <topic>camera/image_raw</topic>            
+        </sensor>
+
+        <!-- Thermal Infrared Camera (LWIR) -->
+        <sensor name="thermal_camera" type="thermal">
+            <camera>
+                <horizontal_fov>1.089</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>L8</format>
+                </image>
+                <clip>
+                    <near>0.1</near>
+                    <far>25</far>
+                </clip>
+                <optical_frame_id>optical_thermal_camera_link</optical_frame_id>
+                <camera_info_topic>thermal/camera_info</camera_info_topic>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>15</update_rate>
+            <visualize>true</visualize>
+            <topic>thermal/image_raw</topic>            
+        </sensor>
+
+        <!-- High-Intensity Gimbal-Mounted Flashlight / Searchlight -->
+        <light name="camera_flashlight" type="spot">
+            <pose>0.02 0 -0.005 0 0 0</pose>
+            <diffuse>1.0 1.0 0.95 1.0</diffuse>
+            <specular>0.8 0.8 0.8 1.0</specular>
+            <attenuation>
+                <range>35.0</range>
+                <linear>0.02</linear>
+                <constant>0.1</constant>
+                <quadratic>0.002</quadratic>
+            </attenuation>
+            <direction>1 0 0</direction>
+            <spot>
+                <inner_angle>0.35</inner_angle>
+                <outer_angle>0.85</outer_angle>
+                <falloff>1.0</falloff>
+            </spot>
+            <cast_shadows>true</cast_shadows>
+            <intensity>3.5</intensity>
+        </light>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    </gazebo>
+
+
+    <gazebo reference="scan_link">
+        <selfCollide>false</selfCollide>
+        <mu1 value="0.05" />
+        <mu2 value="0.05" />
+    </gazebo>
+
+    <!-- 3D High-Precision Multi-Beam GPU LiDAR -->
+    <gazebo reference="scan_link">
+        <sensor name="gpu_lidar" type="gpu_lidar">
+            <update_rate>10</update_rate>
+            <topic>scan</topic>
+            <gz_frame_id>scan_link</gz_frame_id>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <!--(max_angle-min_angle)/samples * resolution -->
+                        <resolution>1</resolution>
+                        <min_angle>-3.14156</min_angle>
+                        <max_angle>3.14156</max_angle>
+                    </horizontal>
+                    <!-- 3D Multi-Beam Vertical Scan Channels -->
+                    <vertical>
+                        <samples>16</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-0.2618</min_angle>
+                        <max_angle>0.2618</max_angle>
+                    </vertical>
+                </scan>
+                <range>
+                    <min>0.05</min>
+                    <max>10.0</max>
+                    <resolution>0.015</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+                <frame_id>scan_link</frame_id>
+            </lidar>
+            <always_on>1</always_on>
+            <visualize>true</visualize>
+        </sensor>
+    </gazebo>   
+
+
+    <gazebo>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="gz-sim-thermal-system" name="gz::sim::systems::Thermal"/>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+        <sensor name="imu" type="imu">
+            <always_on>1</always_on>
+            <update_rate>50</update_rate>
+            <visualize>true</visualize>
+            <topic>imu</topic>
+            <enable_metrics>true</enable_metrics>
+            <gz_frame_id>imu_link</gz_frame_id>
+        </sensor>
+    </gazebo>
+
+    <gazebo>  
+        <plugin 
+            filename="gz-sim-joint-position-controller-system" 
+            name="gz::sim::systems::JointPositionController">
+            <joint_name>camera_base_cylinder_joint</joint_name>   
+            <p_gain>1.0</p_gain>
+            <i_gain>0.0</i_gain>
+            <d_gain>0.05</d_gain>
+            <cmd_max>0.3</cmd_max>
+            <cmd_min>-0.3</cmd_min>
+        </plugin>
+    </gazebo>
+
+   
+
+
+
+    <gazebo reference="camera_sphere_link">
+        <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="camera_cylinder_wheel_link">
+        <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo>
+        <plugin 
+            filename="gz-sim-joint-position-controller-system" 
+            name="gz::sim::systems::JointPositionController">
+            <joint_name>camera_cylinder_sphere_joint</joint_name>  
+            <p_gain>1.0</p_gain>
+            <i_gain>0.0</i_gain>
+            <d_gain>0.05</d_gain>
+            <cmd_max>0.3</cmd_max>
+            <cmd_min>-0.3</cmd_min>
+        </plugin>
+    </gazebo>
+
+
+
+        
+
+
+
+</robot>

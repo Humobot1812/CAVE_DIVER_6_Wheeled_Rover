@@ -1,0 +1,142 @@
+solid landmark_hexagon.stl
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 0.000000 -0.100000 -0.050000
+      vertex 0.400000 -0.100000 -0.050000
+      vertex 0.200000 -0.200000 -0.050000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 0.000000 -0.100000 -0.050000
+      vertex 0.400000 0.100000 -0.050000
+      vertex 0.400000 -0.100000 -0.050000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 0.000000 -0.100000 -0.050000
+      vertex 0.200000 0.200000 -0.050000
+      vertex 0.400000 0.100000 -0.050000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 0.000000 -0.100000 -0.050000
+      vertex 0.000000 0.100000 -0.050000
+      vertex 0.200000 0.200000 -0.050000
+    endloop
+  endfacet
+  facet normal -0.000000 0.000000 1.000000
+    outer loop
+      vertex 0.000000 -0.100000 0.050000
+      vertex 0.200000 -0.200000 0.050000
+      vertex 0.400000 -0.100000 0.050000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 1.000000
+    outer loop
+      vertex 0.000000 -0.100000 0.050000
+      vertex 0.400000 -0.100000 0.050000
+      vertex 0.400000 0.100000 0.050000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 1.000000
+    outer loop
+      vertex 0.000000 -0.100000 0.050000
+      vertex 0.400000 0.100000 0.050000
+      vertex 0.200000 0.200000 0.050000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 1.000000
+    outer loop
+      vertex 0.000000 -0.100000 0.050000
+      vertex 0.200000 0.200000 0.050000
+      vertex 0.000000 0.100000 0.050000
+    endloop
+  endfacet
+  facet normal -0.447214 -0.894427 0.000000
+    outer loop
+      vertex 0.000000 -0.100000 -0.050000
+      vertex 0.200000 -0.200000 -0.050000
+      vertex 0.200000 -0.200000 0.050000
+    endloop
+  endfacet
+  facet normal -0.447214 -0.894427 0.000000
+    outer loop
+      vertex 0.000000 -0.100000 -0.050000
+      vertex 0.200000 -0.200000 0.050000
+      vertex 0.000000 -0.100000 0.050000
+    endloop
+  endfacet
+  facet normal 0.447214 -0.894427 0.000000
+    outer loop
+      vertex 0.200000 -0.200000 -0.050000
+      vertex 0.400000 -0.100000 -0.050000
+      vertex 0.400000 -0.100000 0.050000
+    endloop
+  endfacet
+  facet normal 0.447214 -0.894427 0.000000
+    outer loop
+      vertex 0.200000 -0.200000 -0.050000
+      vertex 0.400000 -0.100000 0.050000
+      vertex 0.200000 -0.200000 0.050000
+    endloop
+  endfacet
+  facet normal 1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.400000 -0.100000 -0.050000
+      vertex 0.400000 0.100000 -0.050000
+      vertex 0.400000 0.100000 0.050000
+    endloop
+  endfacet
+  facet normal 1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.400000 -0.100000 -0.050000
+      vertex 0.400000 0.100000 0.050000
+      vertex 0.400000 -0.100000 0.050000
+    endloop
+  endfacet
+  facet normal 0.447214 0.894427 0.000000
+    outer loop
+      vertex 0.400000 0.100000 -0.050000
+      vertex 0.200000 0.200000 -0.050000
+      vertex 0.200000 0.200000 0.050000
+    endloop
+  endfacet
+  facet normal 0.447214 0.894427 -0.000000
+    outer loop
+      vertex 0.400000 0.100000 -0.050000
+      vertex 0.200000 0.200000 0.050000
+      vertex 0.400000 0.100000 0.050000
+    endloop
+  endfacet
+  facet normal -0.447214 0.894427 0.000000
+    outer loop
+      vertex 0.200000 0.200000 -0.050000
+      vertex 0.000000 0.100000 -0.050000
+      vertex 0.000000 0.100000 0.050000
+    endloop
+  endfacet
+  facet normal -0.447214 0.894427 0.000000
+    outer loop
+      vertex 0.200000 0.200000 -0.050000
+      vertex 0.000000 0.100000 0.050000
+      vertex 0.200000 0.200000 0.050000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.000000 0.100000 -0.050000
+      vertex 0.000000 -0.100000 -0.050000
+      vertex 0.000000 -0.100000 0.050000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.000000 0.100000 -0.050000
+      vertex 0.000000 -0.100000 0.050000
+      vertex 0.000000 0.100000 0.050000
+    endloop
+  endfacet
+endsolid landmark_hexagon.stl
