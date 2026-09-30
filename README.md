@@ -2,7 +2,7 @@
 
 <img src="docs/images/gcs_dashboard.png" alt="CAVE DIVER Ground Control Station Dashboard" width="100%"/>
 
-# CAVE DIVER — SIH 2026
+# CAVE DIVER — 6 Wheeled Rover
 
 ### Autonomous Subterranean Reconnaissance & Hazardous Environment Monitoring Platform
 
