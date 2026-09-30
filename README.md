@@ -515,19 +515,17 @@ Each marker uniquely identifies a subterranean coordinate block. When detected b
 | Platform Engineering, GCS Architecture, Simulation & Control | Abhinav |
 
 - Contact: ironman18122004@gmail.com
-- Repository: [https://github.com/Humobot1812/CAVE_DIVER_SIH_2026](https://github.com/Humobot1812/CAVE_DIVER_SIH_2026)
 
 ---
 
 ## License
 
-Developed for the Smart India Hackathon 2026. All rights reserved.
+Developed for Research . All rights reserved.
 
 ---
 
 <div align="center">
 
-**Smart India Hackathon 2026**
 
 *ROS 2 Humble · Ignition Gazebo Fortress · OpenCV · Flask · Python 3.10*
 
