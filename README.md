@@ -326,9 +326,12 @@ pip install flask opencv-python numpy
 ## Installation and Build
 
 ```bash
+mkdir -p ~/CAVE_DIVER
+cd ~/CAVE_DIVER
 # 1. Clone the repository
-git clone https://github.com/Humobot1812/CAVE_DIVER_SIH_2026.git
-cd CAVE_DIVER_SIH_2026
+git clone https://github.com/Humobot1812/CAVE_DIVER_6_Wheeled_Rover.git
+mv CAVE_DIVER_6_Wheeled_Rover src
+
 
 # 2. Resolve and install system dependencies
 rosdep install --from-paths . --ignore-src -r -y
@@ -429,7 +432,7 @@ curl -X POST http://localhost:5001/api/flashlight \
 ## Project Directory Structure
 
 ```
-CAVE_DIVER_SIH_2026/
+CAVE_DIVER_6_Wheeled_Rover/
 |-- .gitignore                      # Git exclusion rules
 |-- README.md                       # Master system documentation
 |-- docs/
