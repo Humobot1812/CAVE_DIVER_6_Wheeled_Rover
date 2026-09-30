@@ -518,6 +518,12 @@ Each marker uniquely identifies a subterranean coordinate block. When detected b
 
 ---
 
+## 🎥 Project Videos
+
+📺 [CAVE DIVER 6-Wheeled Rover — Complete YouTube Playlist](https://youtube.com/playlist?list=PLN2_S0jB7cO0&si=HsBsYTA4Z0DpCBn5)
+
+---
+
 ## License
 
 Developed for Research . All rights reserved.
